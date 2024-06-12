@@ -1,0 +1,39 @@
+@startuml
+package com.example.demo {
+
+  class User {
+    String id
+    String name
+    Integer age
+    String country
+    String email
+  }
+
+  interface UserRepository {
+    +Optional<User> findById(String id)
+  }
+
+  class UserService {
+    -UserRepository userRepository
+    +User saveUser(User user)
+    +Optional<User> getUserById(String id)
+  }
+
+  class UserController {
+    -UserService userService
+    +ResponseEntity<?> registerUser(User user)
+    +ResponseEntity<?> getUserById(String id, String param)
+  }
+
+  class LoggingAspect {
+    +void logBefore(JoinPoint joinPoint)
+    +void logAfter(JoinPoint joinPoint, Object result)
+  }
+
+  UserRepository "1" *-- "0..*" User
+  UserService "1" *-- "1" UserRepository
+  UserController "1" *-- "1" UserService
+  LoggingAspect "1" *-- "0..*" UserController
+
+}
+@enduml
